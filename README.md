@@ -1,30 +1,31 @@
 
-##Pinterest_Data_Pipeline
+# Pinterest_Data_Pipeline
 
-Table of Contents
+# Kafka AWS IAM Authentication Project
 
-Description
-Installation
-Usage
-File Structure
-License
-Description
+## Table of Contents
+- [Description](#description)
+  - [What I Learned](#what-i-learned)
+- [Installation](#installation)
+- [Usage](#usage)
+- [File Structure](#file-structure)
+- [License](#license)
 
+## Description
 This project demonstrates how to configure a Kafka client to use AWS IAM for authentication. The aim is to securely connect to an AWS MSK cluster using IAM roles. Through this project, we learn how to configure Kafka clients, manage topics, and utilize AWS IAM for secure authentication.
 
-What I Learned
-Configuring Kafka clients for AWS IAM authentication.
-Managing Kafka topics via command line.
-Secure communication using SASL_SSL.
-Installation
+### What I Learned
+- Configuring Kafka clients for AWS IAM authentication.
+- Managing Kafka topics via command line.
+- Secure communication using SASL_SSL.
 
+## Installation
 To set up the project, follow these steps:
 
-Clone the repository:
-sh
-Copy code
-git clone <repository-url>
-cd <repository-directory>
+1. **Clone the repository:**
+   ```sh
+   git clone 
+   
 Navigate to the Kafka installation folder:
 sh
 Copy code
@@ -52,4 +53,4 @@ Copy code
 List Kafka topics:
 sh
 Copy code
-./kafka-topics.sh --bootstrap-server b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-2.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-3.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098 --list --command-config client.properties
+./kafka-topics.sh --bootstrap-server b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east
