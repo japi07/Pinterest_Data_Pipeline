@@ -9,7 +9,7 @@
 
 ## Project Description
 
-This project involves setting up a data streaming pipeline using AWS Managed Streaming for Apache Kafka (MSK), Python, and Amazon S3. The goal is to stream data from three different tables (`pinterest_data`, `geolocation_data`, and `user_data`) to Kafka topics and store the streamed data in an S3 bucket.
+This project involves setting up a data streaming pipeline using AWS Managed Streaming for Apache Kafka (MSK), Python, and Amazon S3. The goal is to stream data from three different tables (`pinterest_data`, `geolocation_data`, and `user_data`) to Kafka topics and store the streamed data in an S3 bucket. Next steps include integrating Amazon S3 with Databricks to process and analyze batch data.
 
 ### Aim of the Project
 
@@ -24,6 +24,10 @@ This project involves setting up a data streaming pipeline using AWS Managed Str
 - Using Python for data extraction and posting to Kafka topics.
 - Consuming data from Kafka topics.
 - Storing streamed data in Amazon S3.
+- How to mount an S3 bucket to Databricks.
+- How to load data into Spark DataFrames.
+- Working with Delta tables in Databricks.
+- Querying and analyzing batch data with PySpark.
 
 ## Installation Instructions
 
@@ -96,4 +100,57 @@ This project involves setting up a data streaming pipeline using AWS Managed Str
     aws s3 ls s3://<your_s3_bucket>/topics/
     ```
 
+4. **Setting Up Airflow DAG:**
+
+    To trigger a Databricks Notebook, create a Python script named `1244224ff301_dag.py` with the following content:
+
+    ```python
+    from airflow import DAG
+    from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
+    from datetime import datetime, timedelta
+
+    # Define params for the Databricks Submit Run Operator
+    notebook_task = {
+        'notebook_path': '<DATABRICKS_NOTEBOOK_PATH>',  # Replace with your notebook path
+    }
+
+    default_args = {
+        'owner': '1244224ff301',
+        'depends_on_past': False,
+        'email_on_failure': False,
+        'email_on_retry': False,
+        'retries': 1,
+        'retry_delay': timedelta(minutes=5),
+    }
+
+    with DAG(
+        dag_id='1244224ff301',
+        default_args=default_args,
+        description='A simple DAG to trigger a Databricks Notebook',
+        schedule_interval='@daily',  # This sets the schedule to daily
+        start_date=datetime(2023, 1, 1),  # Replace with the desired start date
+        catchup=False,
+    ) as dag:
+
+        submit_run = DatabricksSubmitRunOperator(
+            task_id='submit_run',
+            databricks_conn_id='databricks_default',
+            existing_cluster_id='<CLUSTER_ID>',  # Replace with your Databricks cluster ID
+            notebook_task=notebook_task
+        )
+
+        submit_run
+    ```
+
+    - Upload this script to the `dags` folder in the `mwaa-dags-bucket`.
+    - Ensure the DAG name inside the script matches `1244224ff301`.
+
+5. **Manually Trigger the DAG:**
+
+    - Open the Airflow UI for the MWAA environment.
+    - Locate the DAG named `1244224ff301`.
+    - Click on the "Trigger DAG" button.
+    - Monitor the DAG's execution status to ensure it runs successfully.
+
+## File Structure
 

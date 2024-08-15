@@ -12,7 +12,7 @@ random.seed(100)
 class AWSDBConnector:
 
     def __init__(self):
-        # Load database credentials from the yaml file
+        
         with open('db_creds.yaml', 'r') as file:
             creds = yaml.safe_load(file)
             self.HOST = creds['HOST']
@@ -29,13 +29,13 @@ class AWSDBConnector:
 new_connector = AWSDBConnector()
 
 # Kafka REST Proxy URL
-KAFKA_REST_PROXY_URL = 'https://fi7y6mrwcg.execute-api.us-east-1.amazonaws.com/1244224ff301'  # Update with your actual URL
+KAFKA_REST_PROXY_URL = 'https://fi7y6mrwcg.execute-api.us-east-1.amazonaws.com/1244224ff301'  
 
 # Kafka topics
 TOPICS = {
-    'pinterest_data': 'pinterest_topic',
-    'geolocation_data': 'geolocation_topic',
-    'user_data': 'user_topic'
+    'pinterest_data': '1244224ff301.pin',
+    'geolocation_data': '1244224ff301.geo',
+    'user_data': '1244224ff301.user'
 }
 
 def send_data_to_kafka(topic, data):
@@ -43,7 +43,7 @@ def send_data_to_kafka(topic, data):
     headers = {'Content-Type': 'application/vnd.kafka.json.v2+json'}
     payload = {'records': [{'value': data}]}
 
-    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    response = requests.post(url, headers=headers, data=json.dumps(payload, default=str))
     if response.status_code == 200:
         print(f'Successfully sent data to topic {topic}')
     else:
